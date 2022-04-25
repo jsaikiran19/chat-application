@@ -36,3 +36,8 @@ export const login = (username , password ) => {
 export const forgot = (username ) => axios.post('/api/authnew/forgot', {
     email:username
 });
+
+
+export const getChatsForOrg = (id)=> axios.get('');
+
+export const getAllOrgs = (id)=> axios.get('');

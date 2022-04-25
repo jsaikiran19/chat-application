@@ -1,5 +1,5 @@
 import store from "../../store";
-import { getUserDetails, setUserDetails } from "../../services/user.service"
+import { getAllOrgs, getUserDetails, getChatsForOrg, setUserDetails } from "../../services/user.service"
 import Typography from "@mui/material/Typography";
 import React from "react";
 import ListItemText from "@mui/material/ListItemText";
@@ -8,15 +8,37 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
+import { useState, useEffect } from 'react';
+import './home-page.scss';
 
 export function Home() {
     const userDetails = store.getState().userDetails;
 
+    const [orgs, setOrgs] = useState(['Organization1', 'Organization2', 'Organization2'])
+    const [selectedOrg, setSelectedOrg] = useState(0);
+    
+    const [orgChats, setOrgChats] = useState([1,2,3]); 
 
+    const [selectedChat, setSelectedChat] = useState();
+
+    useEffect(()=>{
+        getOrgs();
+        getOrgUsers()
+    },[])
+
+    const getOrgs = async ()=> {
+        const {data} = await getAllOrgs();
+        // setOrgs(data);
+    }
+
+    const getOrgUsers = async ()=> {
+        const {data} = await getChatsForOrg();
+        // setOrgChats(data);
+    }
 
     const ListElement = () => {
         return (
-            <>
+            <div className="list-element">
                 <ListItem alignItems="flex-start">
                     <ListItemAvatar>
                         <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
@@ -39,22 +61,27 @@ export function Home() {
                     />
                 </ListItem>
                 <Divider variant="inset" component="li" />
-            </>
+            </div>
         );
+    }
+
+    const changeOrg = (i)=> {
+        setSelectedOrg(i);
+        getChatsForOrg(orgs[i])
     }
     return (
         <div className="home">
-            <div className="chat-left-pane" style={{ width: '30%', display:'flex', alignItems:'center' }}>
-                <div className="orgs-list" style={{width:'50px'}}>
-                    {['A', 'B', 'C'].map(e => <div className="org-name">
+            <div className="chat-left-pane" style={{ width: '30%', display:'flex', margin:'2em', alignItems:'center' }}>
+                <div className="orgs-list" style={{ borderRight: '1px solid lightgrey', height:'100vh', marginTop:'2em', paddingRight:'2em'}} >
+                    {orgs && orgs.map((e,i) => <div onClick={()=>changeOrg(i)} style={{padding:'15px', margin:'10px', cursor:'pointer'}} className={`org-name`+ (i===selectedOrg ? ' --selected' :"")} >
                         {e}
                     </div>)}
                 </div>
-                <div className="users-list">
+                {selectedOrg!==null && <div className="users-list" style={{height:'100vh'}}>
                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                        {[1, 2, 3].map(e => <ListElement />)}
+                        {orgChats.map((e,i) => <ListElement/>)}
                     </List>
-                </div>
+                </div>}
             </div>
         </div>
     )
