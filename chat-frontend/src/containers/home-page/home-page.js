@@ -10,6 +10,7 @@ import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import { useState, useEffect } from 'react';
 import './home-page.scss';
+import { Messages } from "../../components/messages/messages";
 
 export function Home() {
     const userDetails = store.getState().userDetails;
@@ -70,18 +71,21 @@ export function Home() {
         getChatsForOrg(orgs[i])
     }
     return (
-        <div className="home">
-            <div className="chat-left-pane" style={{ width: '30%', display:'flex', margin:'2em', alignItems:'center' }}>
+        <div className="home" style={{display:'flex'}}>
+            <div className="chat-left-pane" style={{display:'flex', margin:'2em', alignItems:'center' }}>
                 <div className="orgs-list" style={{ borderRight: '1px solid lightgrey', height:'100vh', marginTop:'2em', paddingRight:'2em'}} >
                     {orgs && orgs.map((e,i) => <div onClick={()=>changeOrg(i)} style={{padding:'15px', margin:'10px', cursor:'pointer'}} className={`org-name`+ (i===selectedOrg ? ' --selected' :"")} >
                         {e}
                     </div>)}
                 </div>
-                {selectedOrg!==null && <div className="users-list" style={{height:'100vh'}}>
+                {/* {selectedOrg!==null && <div className="users-list" style={{height:'100vh'}}>
                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                         {orgChats.map((e,i) => <ListElement/>)}
                     </List>
-                </div>}
+                </div>} */}
+            </div>
+            <div className="chat-right-pane" style={{width:'100%'}}>
+                <Messages></Messages>
             </div>
         </div>
     )
