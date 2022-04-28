@@ -72,7 +72,7 @@ export function Home() {
     }
     return (
         <div className="home" style={{display:'flex'}}>
-            <div className="chat-left-pane" style={{display:'flex', margin:'2em', alignItems:'center' }}>
+            <div className="chat-left-pane" style={{display:'flex', margin:'2em 1em', alignItems:'center' }}>
                 <div className="orgs-list" style={{ borderRight: '1px solid lightgrey', height:'100vh', marginTop:'2em', paddingRight:'2em'}} >
                     {orgs && orgs.map((e,i) => <div onClick={()=>changeOrg(i)} style={{padding:'15px', margin:'10px', cursor:'pointer'}} className={`org-name`+ (i===selectedOrg ? ' --selected' :"")} >
                         {e}

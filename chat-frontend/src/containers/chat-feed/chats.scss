@@ -1,0 +1,57 @@
+@import '../../scss/variables.scss';
+.message-bubble {
+    .message-bubble-content {
+        .your-message-bubble-content-text {
+            background-color: $primary;
+            color: $white;
+            border-radius: 1.3em;
+            padding: 0.5em 1em;
+        }
+        .message-bubble-time {
+            text-align: right;
+        }
+    }
+}
+.message-bubble-time {
+    font-size: small;
+    color: lightgrey;
+    padding-top: 2px;
+}
+
+.other-message-bubble-content-text {
+    background-color: $grey;
+    color: $black;
+    border-radius: 1.3em;
+    padding: 0.5em 1em;
+}
+
+.chat-feed {
+    .chat-feed__header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .chat-feed__header-title {
+           color: $primary;
+           font-size: x-large;
+
+        }
+        .last-active-date {
+            color: $primary;
+            font-size: small;
+        }
+    }
+    .chat-feed__body__messages {
+        height: 80vh;
+        text-align: left;
+    }
+    .input-text {
+        width: 85%;
+        border: 1px solid lightgrey;
+        border-radius: 12px;
+        padding: 15px;
+        font-size: 14px;
+        &:focus {
+            outline: none;
+        }
+    }
+}

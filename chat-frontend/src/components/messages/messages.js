@@ -5,6 +5,8 @@ import "./messages.scss";
 import store from "../../store";
 import { ChatApp } from "./chat-app/chat-app";
 import { ChatHead } from "../../containers/chat-head/chat-head";
+import { ChatFeed } from "../../containers/chat-feed/chat-feed-column/chat-feed-column";
+import { Chats } from "../../containers/chat-feed/chats";
 
 export function Messages() {
   const userDetails = store.getState().userDetails;
@@ -12,12 +14,13 @@ export function Messages() {
     getChats();
   });
   return (
-    <div className="messages-container">
-      {/* <div className="chats-list-container">
-        <ChatHead />
-      </div> */}
-
-      <div className="messages-body">{userDetails && <ChatApp />}</div>
+    <>
+    <div className="messages-container" style={{display:'flex'}}>
+      <ChatFeed/>
+      <div className="messages-body" style={{width:'60%', overflow:"hidden scroll"}}>
+        <Chats />
+      </div>
     </div>
+    </>
   );
 }
