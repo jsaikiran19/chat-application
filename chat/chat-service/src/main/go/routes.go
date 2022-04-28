@@ -11,7 +11,7 @@ func AddApproutes(route *mux.Router) {
 
 	log.Println("Loading Routes...")
 
-	route.HandleFunc("/getUser", handlers.GetUser).Methods("POST")
+	route.HandleFunc("/loginUser", handlers.LoginUser).Methods("POST")
 
 	route.HandleFunc("/getUserOrgDetails/{userId}", handlers.GetUserOrgDetails)
 
@@ -23,9 +23,9 @@ func AddApproutes(route *mux.Router) {
 
 	route.HandleFunc("/userOrgDetails", handlers.AddUserOrgDetails).Methods("PUT")
 
-	route.HandleFunc("/orgDetails", handlers.AddOrg).Methods("PUT")
+	route.HandleFunc("/orgRegistration", handlers.AddOrg).Methods("PUT")
 
-	route.HandleFunc("/userDetails", handlers.AddUser).Methods("PUT")
+	route.HandleFunc("/userRegistration", handlers.AddUser).Methods("PUT")
 
 	route.HandleFunc("/getOrgLevelUsers/{OrgId}", handlers.GetOrgLevelUsers)
 

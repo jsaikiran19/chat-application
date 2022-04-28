@@ -8,17 +8,17 @@ import (
 )
 
 // GetUserQueryHandler gets details about user and org
-func GetUserQueryHandler(UserDetail UserEmailBase) UserDetailsStruct {
+func GetUserQueryHandler(UserDetail UserDetailsBase) UserDetailsStruct {
 	var UserDetails UserDetailsStruct
 
 	db := utils.OpenMySqlConnection()
-	query := fmt.Sprintf("CALL getUser(\"%s\")", UserDetail.Email)
+	query := fmt.Sprintf("CALL getUser(\"%s\")", UserDetail.UserMail)
 	rows, err := db.Query(query)
 	if err != nil {
 		panic(err.Error())
 	}
 	for rows.Next() {
-		err = rows.Scan(&UserDetails.Uid, &UserDetails.Email)
+		err = rows.Scan(&UserDetails.Uid, &UserDetails.UserMail, &UserDetails.UserPassword)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -27,7 +27,7 @@ func GetUserQueryHandler(UserDetail UserEmailBase) UserDetailsStruct {
 
 	log.Println("Database Connection Closed...")
 
-	return UserDetailsStruct{UserDetails.Email, UserDetails.Uid}
+	return UserDetails
 }
 
 // GetUserOrgDetailsQueryHandler gets details about user and org
@@ -133,10 +133,26 @@ func AddUserOrgDetailsQueryHandler(Uid string, OrgId string) error {
 	return nil
 }
 
-//AddNewUserQueryHandler add user to org.
-func AddNewUserQueryHandler(UserMail string) error {
+//AddNewUserQueryHandler add user.
+func AddNewUserQueryHandler(UserMail string, Password string) error {
 	db := utils.OpenMySqlConnection()
-	query := fmt.Sprintf("CALL addNewUser(\"%s\")", UserMail)
+	query := fmt.Sprintf("CALL addNewUser(\"%s\",\"%s\")", UserMail, Password)
+	_, err := db.Query(query)
+	if err != nil {
+		return err
+	}
+
+	db.Close()
+
+	log.Println("Database Connection Closed...")
+
+	return nil
+}
+
+//AddNewOrgQueryHandler add org.
+func AddNewOrgQueryHandler(Org string) error {
+	db := utils.OpenMySqlConnection()
+	query := fmt.Sprintf("CALL addOrg(\"%s\")", Org)
 	_, err := db.Query(query)
 	if err != nil {
 		return err
@@ -208,7 +224,7 @@ func GetMessagesQueryHandler(ChatID string) []ChatMessageStruct {
 	var Chat ChatMessageStruct
 
 	Cassandra := utils.OpenCassandraConnection()
-	query := fmt.Sprintf("SELECT channel_id,messsage,author_id,cast(time_sent as text) as time_sent from messages where channel_id = '%s' limit 5;", ChatID)
+	query := fmt.Sprintf("SELECT channel_id,messsage,author_id,cast(time_sent as text) as time_sent from messages where channel_id = '%s';", ChatID)
 	log.Println(query)
 	rows := Cassandra.Query(query).Iter().Scanner()
 	for rows.Next() {
