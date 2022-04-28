@@ -1,14 +1,15 @@
 package handlers
 
 import (
+	"chat/utils"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
 )
 
-//GetUser will get userID and orgId relation.
-func GetUser(responseWriter http.ResponseWriter, request *http.Request) {
-	var UserDetails UserEmailBase
+//LoginUser will get userID and orgId relation.
+func LoginUser(responseWriter http.ResponseWriter, request *http.Request) {
+	var UserDetails UserDetailsBase
 
 	// Handling incoming variables.
 	decoder := json.NewDecoder(request.Body)
@@ -26,13 +27,25 @@ func GetUser(responseWriter http.ResponseWriter, request *http.Request) {
 		}
 		ReturnResponse(responseWriter, request, response)
 	} else {
-		UserDetail := GetUserQueryHandler(UserDetails)
-		if UserDetail.Email != "" {
+		DBDetail := GetUserQueryHandler(UserDetails)
+		//compare passwords
+		PassErr := utils.ComparePasswords(UserDetails.UserPassword, DBDetail.UserPassword)
+		if PassErr != nil {
+			response := APIResponseStruct{
+				Code:     http.StatusNotFound,
+				Status:   http.StatusText(http.StatusNotFound),
+				Message:  "Password does not match",
+				Response: nil,
+			}
+			ReturnResponse(responseWriter, request, response)
+		}
+
+		if DBDetail.UserMail != "" {
 			response := APIResponseStruct{
 				Code:     http.StatusOK,
 				Status:   http.StatusText(http.StatusOK),
 				Message:  "Success",
-				Response: UserDetail,
+				Response: DBDetail,
 			}
 			ReturnResponse(responseWriter, request, response)
 		} else {
@@ -236,7 +249,7 @@ func AddOrg(responseWriter http.ResponseWriter, request *http.Request) {
 		ReturnResponse(responseWriter, request, response)
 	} else {
 		if OrgDetailsRequestPayload.OrgName != "" {
-			err := AddNewUserQueryHandler(OrgDetailsRequestPayload.OrgName)
+			err := AddNewOrgQueryHandler(OrgDetailsRequestPayload.OrgName)
 			if err != nil {
 				response := APIResponseStruct{
 					Code:     http.StatusBadRequest,
@@ -285,8 +298,21 @@ func AddUser(responseWriter http.ResponseWriter, request *http.Request) {
 		}
 		ReturnResponse(responseWriter, request, response)
 	} else {
-		if UserDetailsRequestPayload.UserMail != "" {
-			err := AddNewUserQueryHandler(UserDetailsRequestPayload.UserMail)
+		if UserDetailsRequestPayload.UserMail != "" && UserDetailsRequestPayload.UserPassword != "" {
+			PasswordHash, passErr := utils.CreatePassword(UserDetailsRequestPayload.UserPassword)
+
+			if passErr != nil {
+				response := APIResponseStruct{
+					Code:     http.StatusBadRequest,
+					Status:   http.StatusText(http.StatusBadRequest),
+					Message:  passErr.Error(),
+					Response: nil,
+				}
+				ReturnResponse(responseWriter, request, response)
+			}
+
+			err := AddNewUserQueryHandler(UserDetailsRequestPayload.UserMail, PasswordHash)
+
 			if err != nil {
 				response := APIResponseStruct{
 					Code:     http.StatusBadRequest,

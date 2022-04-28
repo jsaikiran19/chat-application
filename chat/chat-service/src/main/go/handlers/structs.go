@@ -13,15 +13,11 @@ type UserOrgDetailsBase struct {
 	OrgId string `json:"org_id"`
 }
 
-// UserEmailBase is a universal struct for mapping the user id and email
-type UserEmailBase struct {
-	Email string `json:"user_email"`
-}
-
 // UserDetailsStruct is a universal struct for mapping the user id and email
 type UserDetailsStruct struct {
-	Email string `json:"user_email"`
-	Uid   string `json:"uid"`
+	UserMail     string `json:"user_email"`
+	Uid          string `json:"uid"`
+	UserPassword string `json:"password"`
 }
 
 // UserOrgDetailsStruct is a universal struct for mapping the user id and org id array
@@ -65,9 +61,10 @@ type OrgDetailsBase struct {
 	OrgName string `json:"name"`
 }
 
-// UserDetailsBase is a universal struct for mapping org id
+// UserDetailsBase is a universal struct for mapping user email and password
 type UserDetailsBase struct {
-	UserMail string `json:"user_mail"`
+	UserMail     string `json:"user_mail"`
+	UserPassword string `json:"password"`
 }
 
 // ChatIdStructBase is a universal struct for mapping the users

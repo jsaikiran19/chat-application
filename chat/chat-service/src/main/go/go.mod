@@ -11,5 +11,6 @@ require (
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/rs/cors v1.8.2 // indirect
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 )
