@@ -396,16 +396,44 @@ func GetMessages(responseWriter http.ResponseWriter, request *http.Request) {
 				// Function call for getting chats
 				var Chats []ChatMessageStruct
 
-				Chats = GetMessagesQueryHandler(row.ChatID)
-				response := APIResponseStruct{
-					Code:     http.StatusOK,
-					Status:   http.StatusText(http.StatusOK),
-					Message:  "Success",
-					Response: Chats,
+				type ChatMessage struct {
+					Message []ChatMessageStruct `json:"messages"`
 				}
-				ReturnResponse(responseWriter, request, response)
 
+				Chats = GetMessagesQueryHandler(row.ChatID, ChatIdStructRequestPayload.IsMeta)
+
+				var ChatMessages ChatMessage
+
+				if Chats == nil {
+					ChatMessages.Message = make([]ChatMessageStruct, 0)
+					response := APIResponseStruct{
+						Code:     http.StatusOK,
+						Status:   http.StatusText(http.StatusOK),
+						Message:  "Success",
+						Response: ChatMessages,
+					}
+					ReturnResponse(responseWriter, request, response)
+				} else {
+
+					ChatMessages.Message = Chats
+
+					response := APIResponseStruct{
+						Code:     http.StatusOK,
+						Status:   http.StatusText(http.StatusOK),
+						Message:  "Success",
+						Response: ChatMessages,
+					}
+					ReturnResponse(responseWriter, request, response)
+				}
 			}
+		} else {
+			response := APIResponseStruct{
+				Code:     http.StatusBadRequest,
+				Status:   http.StatusText(http.StatusBadRequest),
+				Message:  "Please provide all inputs",
+				Response: nil,
+			}
+			ReturnResponse(responseWriter, request, response)
 		}
 	}
 }

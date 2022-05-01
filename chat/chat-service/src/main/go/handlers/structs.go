@@ -7,10 +7,18 @@ type NullString struct {
 	sql.NullString
 }
 
+// UserOrgNameDetailsBase is a universal struct for mapping the user id and org id/name
+type UserOrgNameDetailsBase struct {
+	Uid     string `json:"uid"`
+	OrgId   string `json:"org_id"`
+	OrgName string `json:"name"`
+}
+
 // UserOrgDetailsBase is a universal struct for mapping the user id and org id
 type UserOrgDetailsBase struct {
-	Uid   string `json:"uid"`
-	OrgId string `json:"org_id"`
+	Uid       string `json:"uid"`
+	OrgId     string `json:"org_id"`
+	FirstName string `json:"first_name"`
 }
 
 // UserDetailsStruct is a universal struct for mapping the user id and email
@@ -22,14 +30,20 @@ type UserDetailsStruct struct {
 
 // UserOrgDetailsStruct is a universal struct for mapping the user id and org id array
 type UserOrgDetailsStruct struct {
-	Uid   string   `json:"uid"`
-	OrgId []string `json:"org_id"`
+	Uid        string      `json:"uid"`
+	OrgDetails []OrgStruct `json:"org_details"`
+}
+
+// UserNameDetailsStruct is a universal struct for mapping the user id and org id array
+type UserNameDetailsStruct struct {
+	OrgId     string `json:"uid"`
+	FirstName string `json:"first_name"`
 }
 
 // OrgUserDetailsStruct is a universal struct for mapping the user id and org id array
 type OrgUserDetailsStruct struct {
-	OrgId string   `json:"org_id"`
-	Uid   []string `json:"uid"`
+	OrgId       string                  `json:"org_id"`
+	UserDetails []UserNameDetailsStruct `json:"user_details"`
 }
 
 // UserProfileDetailsStruct is a universal struct for mapping the user id and profile description
@@ -72,6 +86,7 @@ type ChatIdStructBase struct {
 	OrgId    string `json:"org_id"`
 	FromUser string `json:"from_user"`
 	ToUser   string `json:"to_user"`
+	IsMeta   string `json:"is_meta"`
 	Message  string `json:"messsage"`
 }
 
