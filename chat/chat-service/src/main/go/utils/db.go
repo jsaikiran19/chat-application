@@ -7,25 +7,15 @@ import (
 	"github.com/gocql/gocql"
 	_ "github.com/gocql/gocql"
 	"log"
+	"os"
 )
-
-// Remove this and add env file for prod
-const (
-	username = "root"
-	password = "password"
-	hostname = "127.0.0.1:3306"
-)
-
-func dsn(dbName string) string {
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbName)
-}
 
 // use this function for prod.
-//func dsn(dbName string) string {
-//	return fmt.Sprintf("%s:%s@tcp(%s)/%s",
-//		os.Getenv("username"), os.Getenv("password"),
-//		os.Getenv("hostname"), dbName)
-//}
+func dsn(dbName string) string {
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s",
+		os.Getenv("mariadb_username"), os.Getenv("mariadb_password"),
+		os.Getenv("mariadb_hostname")+":"+os.Getenv("mariadb_port"), dbName)
+}
 
 // OpenMySqlConnection is used to connect the MySQL database
 func OpenMySqlConnection() *sql.DB {
@@ -51,8 +41,9 @@ var Session *gocql.Session
 // OpenCassandraConnection is used to connect the MySQL database
 func OpenCassandraConnection() *gocql.Session {
 	log.Println("Cassandra Connecting...")
+	connection := fmt.Sprintf("%s:%s", os.Getenv("cassandra_hostname"), os.Getenv("cassandra_port"))
 
-	Cluster := gocql.NewCluster("127.0.0.1:9042")
+	Cluster := gocql.NewCluster(connection)
 	Cluster.Keyspace = "chats"
 	Session, err := Cluster.CreateSession()
 	if err != nil {

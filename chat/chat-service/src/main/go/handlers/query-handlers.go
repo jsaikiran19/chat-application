@@ -32,25 +32,33 @@ func GetUserQueryHandler(UserDetail UserDetailsBase) UserDetailsStruct {
 
 // GetUserOrgDetailsQueryHandler gets details about user and org
 func GetUserOrgDetailsQueryHandler(userId string) UserOrgDetailsStruct {
-	var UserOrgDetails UserOrgDetailsBase
+	var UserOrgDetails UserOrgNameDetailsBase
 	var orgArray []string
+	var orgNameArray []string
+	var org []OrgStruct
 
 	db := utils.OpenMySqlConnection()
 	query := "CALL getUserOrgDetails(" + userId + ")"
 	rows, err := db.Query(query)
 	for rows.Next() {
-		err = rows.Scan(&UserOrgDetails.Uid, &UserOrgDetails.OrgId)
+		err = rows.Scan(&UserOrgDetails.Uid, &UserOrgDetails.OrgId, &UserOrgDetails.OrgName)
 		if err != nil {
 			panic(err.Error())
 		}
 		orgArray = strings.Split(UserOrgDetails.OrgId, ",")
+		orgNameArray = strings.Split(UserOrgDetails.OrgName, ",")
+	}
+
+	for i, s := range orgNameArray {
+		loopOrg := OrgStruct{orgArray[i], s}
+		org = append(org, loopOrg)
 	}
 
 	db.Close()
 
 	log.Println("Database Connection Closed...")
 
-	return UserOrgDetailsStruct{UserOrgDetails.Uid, orgArray}
+	return UserOrgDetailsStruct{UserOrgDetails.Uid, org}
 }
 
 // GetUserProfileQueryHandler gets details about user and org
@@ -169,23 +177,31 @@ func AddNewOrgQueryHandler(Org string) error {
 func GetOrgUserDetailsQueryHandler(OrgId string) OrgUserDetailsStruct {
 	var UserOrgDetails UserOrgDetailsBase
 	var uidArray []string
+	var uidName []string
+	var User []UserNameDetailsStruct
 
 	db := utils.OpenMySqlConnection()
 	query := "CALL getOrgLevelUsers(" + OrgId + ")"
 	rows, err := db.Query(query)
 	for rows.Next() {
-		err = rows.Scan(&UserOrgDetails.OrgId, &UserOrgDetails.Uid)
+		err = rows.Scan(&UserOrgDetails.OrgId, &UserOrgDetails.Uid, &UserOrgDetails.FirstName)
 		if err != nil {
 			panic(err.Error())
 		}
 		uidArray = strings.Split(UserOrgDetails.Uid, ",")
+		uidName = strings.Split(UserOrgDetails.FirstName, ",")
+	}
+
+	for i, s := range uidName {
+		loopUser := UserNameDetailsStruct{uidArray[i], s}
+		User = append(User, loopUser)
 	}
 
 	db.Close()
 
 	log.Println("Database Connection Closed...")
 
-	return OrgUserDetailsStruct{UserOrgDetails.OrgId, uidArray}
+	return OrgUserDetailsStruct{UserOrgDetails.OrgId, User}
 }
 
 //GetChatIdQueryHandler get all the org.
@@ -218,13 +234,19 @@ func GetChatIdQueryHandler(ChatIdStructRequestPayload ChatIdStructBase) ChatIdSt
 }
 
 //GetMessagesQueryHandler get messages for the given chat id.
-func GetMessagesQueryHandler(ChatID string) []ChatMessageStruct {
+func GetMessagesQueryHandler(ChatID string, IsMeta string) []ChatMessageStruct {
 	// initialize variables
 	var Chats []ChatMessageStruct
 	var Chat ChatMessageStruct
 
 	Cassandra := utils.OpenCassandraConnection()
-	query := fmt.Sprintf("SELECT channel_id,messsage,author_id,cast(time_sent as text) as time_sent from messages where channel_id = '%s';", ChatID)
+	var query string
+	if IsMeta == "1" {
+		query = fmt.Sprintf("SELECT channel_id,messsage,author_id,cast(time_sent as text) as time_sent from messages where channel_id = '%s' limit 1;", ChatID)
+	} else {
+		query = fmt.Sprintf("SELECT channel_id,messsage,author_id,cast(time_sent as text) as time_sent from messages where channel_id = '%s';", ChatID)
+	}
+
 	log.Println(query)
 	rows := Cassandra.Query(query).Iter().Scanner()
 	for rows.Next() {

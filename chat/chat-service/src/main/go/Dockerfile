@@ -1,0 +1,6 @@
+FROM golang:1.18
+WORKDIR /app
+COPY . /app/
+# WORKDIR $APP_HOME
+EXPOSE 8000
+CMD  go run .

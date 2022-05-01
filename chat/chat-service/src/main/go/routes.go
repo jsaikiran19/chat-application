@@ -11,6 +11,8 @@ func AddApproutes(route *mux.Router) {
 
 	log.Println("Loading Routes...")
 
+	route.HandleFunc("/ping", handlers.Ping)
+
 	route.HandleFunc("/loginUser", handlers.LoginUser).Methods("POST")
 
 	route.HandleFunc("/getUserOrgDetails/{userId}", handlers.GetUserOrgDetails)
