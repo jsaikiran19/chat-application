@@ -1,5 +1,5 @@
 import store from "../../store";
-import { getAllOrgs, getUserDetails, getChatsForOrg, setUserDetails } from "../../services/user.service"
+import { getUserOrg, getUserDetails, getChatsForOrg, setUserDetails, getOrgInfo, getOrgLevelUsers } from "../../services/user.service"
 import Typography from "@mui/material/Typography";
 import React from "react";
 import ListItemText from "@mui/material/ListItemText";
@@ -11,30 +11,40 @@ import List from "@mui/material/List";
 import { useState, useEffect } from 'react';
 import './home-page.scss';
 import { Messages } from "../../components/messages/messages";
+import { CircularProgress } from "@mui/material";
 
 export function Home() {
-    const userDetails = store.getState().userDetails;
+    const userDetails = store.getState().userDetails || getUserDetails();
 
-    const [orgs, setOrgs] = useState(['Organization1', 'Organization2', 'Organization2'])
+    const [userOrgs, setUserOrgs] = useState()
     const [selectedOrg, setSelectedOrg] = useState(0);
-    
+    const [orgUsers, setOrgUsers] = useState();
     const [orgChats, setOrgChats] = useState([1,2,3]); 
-
+    const [orgsData, setOrgsData] = useState();
     const [selectedChat, setSelectedChat] = useState();
 
     useEffect(()=>{
-        getOrgs();
-        getOrgUsers()
+        getUserOrgDetails();
     },[])
 
-    const getOrgs = async ()=> {
-        const {data} = await getAllOrgs();
-        // setOrgs(data);
+    const getUserOrgDetails = async ()=> {
+        console.log(userDetails.uid);
+        const {data} = await getUserOrg(userDetails.uid);
+        const orgs = data.response.org_details;
+        
+        setUserOrgs(orgs);
+        setSelectedOrg(0);
     }
 
-    const getOrgUsers = async ()=> {
-        const {data} = await getChatsForOrg();
-        // setOrgChats(data);
+    // const getOrgdetails = async (orgId)=> { 
+    //     const {data} = await getOrgInfo(orgId);
+    // }
+
+    
+
+    const getOrgChats = async (id)=> {
+        const {data} = await getChatsForOrg(id);
+        
     }
 
     const ListElement = () => {
@@ -68,14 +78,16 @@ export function Home() {
 
     const changeOrg = (i)=> {
         setSelectedOrg(i);
-        getChatsForOrg(orgs[i])
+        getChatsForOrg(userOrgs[i].org_id)
     }
     return (
         <div className="home" style={{display:'flex'}}>
-            <div className="chat-left-pane" style={{display:'flex', margin:'2em 1em', alignItems:'center' }}>
-                <div className="orgs-list" style={{ borderRight: '1px solid lightgrey', height:'100vh', marginTop:'2em', paddingRight:'2em'}} >
-                    {orgs && orgs.map((e,i) => <div onClick={()=>changeOrg(i)} style={{padding:'15px', margin:'10px', cursor:'pointer'}} className={`org-name`+ (i===selectedOrg ? ' --selected' :"")} >
-                        {e}
+            {userOrgs ? <div className="chat-container" style={{display:'flex'}}>
+            { userOrgs.length && <> <div className="chat-left-pane" style={{display:'flex', flexDirection:'column', margin:'2em 1em', width:'13%', alignItems:'center' }}>
+                <div style={{textDecoration:'underline'}}>Your Orgs</div>
+                <div className="orgs-list" style={{ borderRight: '1px solid lightgrey', height:'100vh', paddingRight:'2em'}} >
+                    {userOrgs.map((org,i) => <div onClick={()=>changeOrg(i)} style={{padding:'15px', margin:'10px', cursor:'pointer'}} className={`org-name`+ (i===selectedOrg ? ' --selected' :"")} >
+                        {org.name}
                     </div>)}
                 </div>
                 {/* {selectedOrg!==null && <div className="users-list" style={{height:'100vh'}}>
@@ -85,8 +97,9 @@ export function Home() {
                 </div>} */}
             </div>
             <div className="chat-right-pane" style={{width:'100%'}}>
-                <Messages></Messages>
-            </div>
+                <Messages org = {userOrgs[selectedOrg]}></Messages>
+            </div> </>}
+            </div> : <CircularProgress/>}
         </div>
     )
 }

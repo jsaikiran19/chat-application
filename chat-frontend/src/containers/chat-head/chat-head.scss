@@ -3,6 +3,7 @@
     backface-visibility: hidden;
     width: -webkit-fill-available;
     transform: translate(0px, 0px) rotate(0deg) scale(1);
+    margin-bottom: 10px;
     .chat-head-container {
         
         padding: 16px 16px 12px;
@@ -10,7 +11,7 @@
         background-color: rgb(217, 217, 217);
         border: 0px solid white;
         border-radius: 12px;
-        width: 350px;
+        width: 300px;
         display: flex;
         flex-direction: column;
         align-items: start;

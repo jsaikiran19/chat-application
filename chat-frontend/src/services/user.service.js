@@ -26,18 +26,28 @@ export function getUserDetails()  {
 }
 
 export const signUp = (user ) => {
-    return axios.post('/api/authnew/signup', user);
+    return axios.put('/userRegistration', user);
 }
 
 export const login = (username , password ) => {
-    return axios.post('/api/auth/login', { username, password });
+    return axios.post('/loginUser', { user_mail:username, password });
 }
 
 export const forgot = (username ) => axios.post('/api/authnew/forgot', {
     email:username
 });
 
+export const getOrgInfo = (id) => axios.get(`/getOrg/${id}`);
 
 export const getChatsForOrg = (id)=> axios.get('');
 
-export const getAllOrgs = (id)=> axios.get('');
+
+export const getOrgLevelUsers = (id) => axios.get(`/getOrgLevelUsers/${id}`);
+
+export const getUserOrg = (id)=> {
+    return axios.get(`getUserOrgDetails/${id}`)};
+
+
+export const getChatsBetweenUsers = (req) => axios.post(`/getMessages`,req);
+
+export const putMessages = (req) => axios.put(`/putMessages`,req);

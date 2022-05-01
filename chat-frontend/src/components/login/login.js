@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { Button, Radio, Alert, Backdrop, CircularProgress } from "@mui/material";
 import GoogleLogin from 'react-google-login';
@@ -10,17 +10,17 @@ import './login.scss';
 export function Login() {
     const [user_type, setUserType] = useState('User');
     const [password, setPassword] = useState('');
-    const [username, setUserName] = useState('');
+    const [user_mail, setUserName] = useState('');
     const navigate = useNavigate();
     const [forgotPasswordForm, setForgotPasswordForm] = useState(false);
     const [searchParams] = useSearchParams()
     const [isFirstTime, setIsFirstTime] = useState(false);
     const [loading, setLoading] = useState(false)
     const [alert, setAlert] = useState({ type: 'success', msg: '' })
+    const {state} = useLocation();
 
     useEffect(() => {
-        const msg = searchParams.get('activated') ? 'Email confirmed. Login.' : ''
-        setIsFirstTime(!!searchParams.get('activated'));
+        const msg = state?.emailVerificationMsg?.msg;
         setAlert({ ...alert, msg })
     }, [])
 
@@ -44,17 +44,19 @@ export function Login() {
 
     const loginUser = async (e) => {
         e.preventDefault();
-        // setLoading(true)
-        navigateToHome({})
+        setLoading(true)
         try {
-            const {data} = await login(username, password);
-            navigateToHome(data.userInfo);
+            const {data} = await login(user_mail, password);
+            console.log(data);
+            setLoading(false);
+            navigateToHome(data.response);
         }
         catch (e) {
             setLoading(false)
             const alert = { type: 'error', msg: e.message };
             setAlert(alert)
         }
+        
     }
 
     // const responseGoogle = async (response) => {
@@ -71,7 +73,7 @@ export function Login() {
     //         try {
     //             setLoading(true);
     //             const {data} = await signUp(user);
-    //             // createUser({...user, username:user.first_name, secret: user.email.split('@')[0]+ "@" +user.first_name, custom_json:JSON.stringify(user) })
+    //             // createUser({...user, user_email:user.first_name, secret: user.email.split('@')[0]+ "@" +user.first_name, custom_json:JSON.stringify(user) })
     //             navigateToHome(data.userInfo);
     //         }
     //         catch (e) {
@@ -94,7 +96,7 @@ export function Login() {
     const resetPassword = async (e) => {
         e.preventDefault();
         try {
-            await forgot(username);
+            await forgot(user_mail);
             const alert = { type: 'success', msg: 'An email has been sent to you to reset your password' }
             setAlert(alert);
         }
@@ -134,9 +136,9 @@ export function Login() {
                             <TextField size="small" type="email" required className="input-text" onChange={handleUserName} id="outlined-basic" label="Username" variant="outlined" />
                             <TextField size="small" required type="password" onChange={handlePassword} className="input-text" id="outlined-basic-password" label="Password" variant="outlined"></TextField>
                             <Button size="small" id="signIn" type="submit" className="input-text" variant="contained">Sign In</Button>
-                            <p className="forgot" onClick={forgotPassoword}>Forgot Password?</p>
-                            {/* <div className="social-media-login">
-                                <GoogleButton style={{ width: '260px' }} onClick={() => { setgoogleLogin(true) }}></GoogleButton>
+                            {/* <p className="forgot" onClick={forgotPassoword}>Forgot Password?</p> */}
+                            <div className="social-media-login">
+                                {/* <GoogleButton style={{ width: '260px' }} onClick={() => { setgoogleLogin(true) }}></GoogleButton>
 
                                 {<GoogleLogin
                                     clientId="1043088031232-5akad0b64kh6ld0qhc1fuohn3s3283vf.apps.googleusercontent.com"
@@ -144,9 +146,9 @@ export function Login() {
                                     onSuccess={responseGoogle}
                                     onFailure={responseGoogle}
                                     cookiePolicy='single_host_origin'
-                                />}
+                                />} */}
                                 <p style={{ textDecoration: "underline" }} onClick={() => navigate('/register')}>Don't have an account? Click here to register.</p>
-                            </div> */}
+                            </div>
                         </div>}
                         {
                             forgotPasswordForm && <div className="login-inputs">

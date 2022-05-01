@@ -1,4 +1,11 @@
 @import '../../../scss/variables.scss';
 .chat-feed {
     border-right: 1px solid lightgrey;
+    .chat-head.--selected {
+        .chat-head-container {
+            background-color: lightblue;
+        }
+        
+    }
 }
+
