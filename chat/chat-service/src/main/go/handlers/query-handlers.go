@@ -23,6 +23,7 @@ func GetUserQueryHandler(UserDetail UserDetailsBase) UserDetailsStruct {
 			panic(err.Error())
 		}
 	}
+	rows.Close()
 	db.Close()
 
 	log.Println("Database Connection Closed...")
@@ -53,7 +54,7 @@ func GetUserOrgDetailsQueryHandler(userId string) UserOrgDetailsStruct {
 		loopOrg := OrgStruct{orgArray[i], s}
 		org = append(org, loopOrg)
 	}
-
+	rows.Close()
 	db.Close()
 
 	log.Println("Database Connection Closed...")
@@ -75,7 +76,7 @@ func GetUserProfileQueryHandler(userId string) UserProfileDetailsStruct {
 			panic(err.Error())
 		}
 	}
-
+	rows.Close()
 	db.Close()
 
 	log.Println("Database Connection Closed...")
@@ -117,7 +118,7 @@ func GetOrgQueryHandler() []OrgStruct {
 		err = rows.Scan(&Org.OrgID, &Org.Name)
 		Orgs = append(Orgs, Org)
 	}
-
+	rows.Close()
 	db.Close()
 
 	log.Println("Database Connection Closed...")
@@ -196,7 +197,7 @@ func GetOrgUserDetailsQueryHandler(OrgId string) OrgUserDetailsStruct {
 		loopUser := UserNameDetailsStruct{uidArray[i], s}
 		User = append(User, loopUser)
 	}
-
+	rows.Close()
 	db.Close()
 
 	log.Println("Database Connection Closed...")
@@ -225,7 +226,7 @@ func GetChatIdQueryHandler(ChatIdStructRequestPayload ChatIdStructBase) ChatIdSt
 	for rows.Next() {
 		err = rows.Scan(&ChatStruct.ChatID, &ChatStruct.OrgId, &ChatStruct.UserIds)
 	}
-
+	rows.Close()
 	db.Close()
 
 	log.Println("Database Connection Closed...")
