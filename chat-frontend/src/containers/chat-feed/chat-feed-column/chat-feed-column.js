@@ -1,12 +1,33 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
-import { getChatsBetweenUsers } from "../../../services/user.service";
+
+import { getChatsBetweenUsers, getLatestMessage } from "../../../services/user.service";
 import store from "../../../store";
 // import { ChatHead } from "../../chat-head/chat-head";
 import './chat-feed.scss';
 export function ChatFeed({users, org, setUserId}) {
 
+    useEffect(() => {
+        getLastMessages()
+        },[])
+    const userDetails = store.getState().userDetails;
+    const [latestMessages, setLatestMessages] = useState();
+    const getLastMessages = async ()=> {
+        const req = (user)=> {
+            return {org_id: org.org_id,
+            from_user: userDetails.uid,
+            to_user: user.uid}
+        }
+        Promise.all(users.map(user=>getLatestMessage(req(user)))).then(res=>{
+            console.log(res);
+            
+            const latestMessages = res.map(r=>r.data.response.messages[0]);
+            setLatestMessages(latestMessages);
+        })
+        // console.log(data);
+    }
     function ChatHead({user,id}) {
-        console.log(id,selectedUser);
+        
         return (
           <div className={`chat-head`+(id===selectedUser ?' --selected':'')} onClick={()=>{setSelectedUser(id); setUserId(id)}}>
            <div className="chat-head-container">
@@ -14,8 +35,8 @@ export function ChatFeed({users, org, setUserId}) {
                   {user.first_name}
               </div>
               <div className='chat-body'>
-                  <div className='chat-message'>hi</div>
-                  <div className='date'>Apr 26</div>
+                  {latestMessages && (<><div className='chat-message'>{latestMessages[id]?.messsage}</div>
+                  <div className='date'>{moment(latestMessages[id]?.time_sent).format('MMM DD')}</div></>)}
               </div>
            </div>
           </div>
@@ -23,7 +44,7 @@ export function ChatFeed({users, org, setUserId}) {
       }
 
     const [selectedUser, setSelectedUser] = useState(0);
-    console.log(users);
+    
 
     return (
         <div className="chat-feed" style={{height:'90vh',width:'22%', paddingRight:'10px'}}>

@@ -51,3 +51,5 @@ export const getUserOrg = (id)=> {
 export const getChatsBetweenUsers = (req) => axios.post(`/getMessages`,req);
 
 export const putMessages = (req) => axios.put(`/putMessages`,req);
+
+export const getLatestMessage = (req) => axios.post(`/getMessages`,{...req,is_meta:"1"});

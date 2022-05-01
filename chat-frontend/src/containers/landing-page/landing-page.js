@@ -1,12 +1,16 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Tab, Tabs, Avatar } from '@mui/material';
+import { useState } from 'react';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { Login } from "../../components/login/login";
 // import logo from '../../assets/fitness-dial-logo.png';
 // import icon1 from '../../assets/running-man.png';
 // import { CreatePassword } from '../../components/create-password/create-password';
 import { Signup } from '../../components/signup/signup';
+import store from '../../store';
 import './landing-page.scss';
 
 export function LandingPage() {
+
     return (
         <div className="wellness-tracking-landing-page">
             <div className="landing-page-container">
@@ -14,12 +18,12 @@ export function LandingPage() {
 
                     <div className="logo-container">
                         {/* <img src={logo} alt="logo" height="150" width="200" /> */}
-                    </div>   
+                    </div>
 
                 </div>
                 <div className="landing-page-body">
                     <div className="landing-page-left-pane">
-                    {/* <img src={icon1} alt="icon1" height="600" width="550" className="icon11" /> */}
+                        {/* <img src={icon1} alt="icon1" height="600" width="550" className="icon11" /> */}
                     </div>
                     <div className="landing-page-right-pane">
                         <Routes>

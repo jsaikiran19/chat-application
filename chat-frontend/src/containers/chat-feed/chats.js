@@ -22,7 +22,6 @@ export function Chats({ userId, org, orgUsers }) {
 
     const getChats = async (req) => {
         const { data } = await getChatsBetweenUsers(req);
-        console.log(data);
         const messages = data?.response?.messages || [];
         
         setMessages(messages.reverse());
@@ -58,7 +57,7 @@ export function Chats({ userId, org, orgUsers }) {
                     <div className="your-message-bubble-content-text" style={{ width: 'fit-content' }}>
                         {message.messsage}
                     </div>
-                    <div className="message-bubble-time" > {message.time} </div>
+                    <div className="message-bubble-time" > {moment(message.time_sent).format('hh:mm a')} </div>
                 </div>
             </div>
         )
