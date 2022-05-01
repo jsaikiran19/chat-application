@@ -14,7 +14,7 @@ import (
 func dsn(dbName string) string {
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s",
 		os.Getenv("mariadb_username"), os.Getenv("mariadb_password"),
-		os.Getenv("mariadb_hostname"), dbName)
+		os.Getenv("mariadb_hostname")+":"+os.Getenv("mariadb_port"), dbName)
 }
 
 // OpenMySqlConnection is used to connect the MySQL database

@@ -7,6 +7,16 @@ import (
 	"net/http"
 )
 
+func Ping(responseWriter http.ResponseWriter, request *http.Request) {
+	response := APIResponseStruct{
+		Code:     http.StatusOK,
+		Status:   http.StatusText(http.StatusOK),
+		Message:  "Success",
+		Response: nil,
+	}
+	ReturnResponse(responseWriter, request, response)
+}
+
 //LoginUser will get userID and orgId relation.
 func LoginUser(responseWriter http.ResponseWriter, request *http.Request) {
 	var UserDetails UserDetailsBase
