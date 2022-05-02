@@ -104,3 +104,9 @@ type ChatMessageStruct struct {
 	FromUser string `json:"author_id"`
 	Message  string `json:"messsage"`
 }
+
+// RemoveUserStruct is a struct for org id and user id
+type RemoveUserStruct struct {
+	OrgID  string `json:"org_id"`
+	UserID string `json:"uid"`
+}

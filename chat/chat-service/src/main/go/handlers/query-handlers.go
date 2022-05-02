@@ -268,3 +268,20 @@ func PutMessageQueryHandler(ChatID string, ChatIdStructRequestPayload ChatIdStru
 		ChatID, ChatIdStructRequestPayload.FromUser, ChatIdStructRequestPayload.Message)
 	Cassandra.Query(query).Exec()
 }
+
+//RemoveUserQueryHandler remove user from org.
+func RemoveUserQueryHandler(UserStruct RemoveUserStruct) error {
+	db := utils.OpenMySqlConnection()
+	query := fmt.Sprintf("CALL update_user_org_details(\"%s\",\"%s\",\"0\")",
+		UserStruct.OrgID, UserStruct.UserID)
+	_, err := db.Query(query)
+	if err != nil {
+		return err
+	}
+
+	db.Close()
+
+	log.Println("Database Connection Closed...")
+
+	return nil
+}

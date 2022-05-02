@@ -424,7 +424,6 @@ func GetMessages(responseWriter http.ResponseWriter, request *http.Request) {
 					}
 					ReturnResponse(responseWriter, request, response)
 				} else {
-
 					ChatMessages.Message = Chats
 
 					response := APIResponseStruct{
@@ -435,6 +434,14 @@ func GetMessages(responseWriter http.ResponseWriter, request *http.Request) {
 					}
 					ReturnResponse(responseWriter, request, response)
 				}
+			} else {
+				response := APIResponseStruct{
+					Code:     http.StatusBadRequest,
+					Status:   http.StatusText(http.StatusBadRequest),
+					Message:  "Chat does not exists between users",
+					Response: nil,
+				}
+				ReturnResponse(responseWriter, request, response)
 			}
 		} else {
 			response := APIResponseStruct{
@@ -489,6 +496,55 @@ func PutMessage(responseWriter http.ResponseWriter, request *http.Request) {
 				}
 				ReturnResponse(responseWriter, request, response)
 			}
+		}
+	}
+}
+
+//RemoveUser will remove user from the given org.
+func RemoveUser(responseWriter http.ResponseWriter, request *http.Request) {
+	var RemoveUserRequestPayload RemoveUserStruct
+
+	// Handling incoming variables.
+	decoder := json.NewDecoder(request.Body)
+	requestDecoderError := decoder.Decode(&RemoveUserRequestPayload)
+	defer request.Body.Close()
+
+	if requestDecoderError != nil {
+		response := APIResponseStruct{
+			Code:     http.StatusBadRequest,
+			Status:   http.StatusText(http.StatusBadRequest),
+			Message:  "Request failed to complete, we are working on it",
+			Response: nil,
+		}
+		ReturnResponse(responseWriter, request, response)
+	} else {
+		if RemoveUserRequestPayload.OrgID != "" && RemoveUserRequestPayload.UserID != "" {
+			err := RemoveUserQueryHandler(RemoveUserRequestPayload)
+			if err != nil {
+				response := APIResponseStruct{
+					Code:     http.StatusBadRequest,
+					Status:   http.StatusText(http.StatusBadRequest),
+					Message:  err.Error(),
+					Response: nil,
+				}
+				ReturnResponse(responseWriter, request, response)
+			} else {
+				response := APIResponseStruct{
+					Code:     http.StatusOK,
+					Status:   http.StatusText(http.StatusOK),
+					Message:  "Success",
+					Response: RemoveUserRequestPayload,
+				}
+				ReturnResponse(responseWriter, request, response)
+			}
+		} else {
+			response := APIResponseStruct{
+				Code:     http.StatusBadRequest,
+				Status:   http.StatusText(http.StatusBadRequest),
+				Message:  "Please provide all inputs",
+				Response: nil,
+			}
+			ReturnResponse(responseWriter, request, response)
 		}
 	}
 }
