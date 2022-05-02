@@ -1,5 +1,7 @@
 # chat-application-adt
 
+- Just run python notebooks inside script folder to load the data. If you prefer to run it via workbench, I have included .sql file.
+
 ## Install dependencies
 - Make sure no app is running on port 8000,3306,9042
 - Installing Golang:
