@@ -35,5 +35,7 @@ func AddApproutes(route *mux.Router) {
 
 	route.HandleFunc("/putMessages", handlers.PutMessage).Methods("PUT")
 
+	route.HandleFunc("/removeUser", handlers.RemoveUser).Methods("DELETE")
+
 	log.Println("Routes are Loaded.")
 }
