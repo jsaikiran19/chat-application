@@ -39,7 +39,6 @@ export function Home() {
 
     const changeOrg = (i) => {
         setSelectedOrg(i);
-        getChatsForOrg(userOrgs[i].org_id)
     }
     return (
         <div className="home" style={{ display: 'flex' }}>
@@ -65,7 +64,7 @@ export function Home() {
                 </div>} */}
                 </div>
                     <div className="chat-right-pane" style={{ width: '100%' }}>
-                        <Messages org={userOrgs[selectedOrg]}></Messages>
+                        { selectedOrg!==undefined && <Messages org={userOrgs[selectedOrg]}></Messages>}
                     </div> </>}
             </div> : <CircularProgress />}
         </div>

@@ -21,6 +21,7 @@ export function Login() {
 
     useEffect(() => {
         const msg = state?.emailVerificationMsg?.msg;
+        console.log(state);
         setAlert({ ...alert, msg })
     }, [])
 

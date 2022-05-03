@@ -48,6 +48,25 @@ function App() {
 
   });
 
+  const changeRoute = (i)=> {
+    switch(i) {
+      case '0':
+        navigate('/dashboard')
+        break;
+      case '1':
+        navigate('/profile');
+        break;
+      case '2':
+          localStorage.removeItem('userDetails');
+          navigate('/login');
+          store.dispatch({type:'SET_USER',userDetails:{}})
+        break;
+      default:
+        break;
+
+    }
+  }
+
 
 
 
@@ -55,13 +74,14 @@ function App() {
     // <ThemeProvider theme={theme}>
     <div className="App" style={{ display: 'flex', flexDirection:'column' }}>
      { showTabs && <div className="navbar" style={{ margin: '1em 2em'}}>
-        <Tabs value={tab} onChange={(e, i) => {setTab(i); navigate(i==="0" ? '/dashboard': '/profile')}}>
+        <Tabs value={tab} onChange={(e, i) => {setTab(i); changeRoute(i);}}>
           <Tab label="Home" value="0" />
           <Tab label="Profile" value="1">  
            <div className="avatar">
             <Avatar src="/static/images/avatar/1.jpg" onClick={() => navigate('/profile')} />
           </div>
           </Tab>
+          <Tab label="Logout" value="2"></Tab>
         </Tabs>
         
       </div> }

@@ -8,19 +8,32 @@ import { getProfileData, updateProfile } from "../../services/profile.service";
 export function Profile() {
 
     const user = store.getState().userDetails;
-    const [userDetails, setUserDetails] = useState();
+    const [userDetails, setUserDetails] = useState({
+        first_name:'',
+        last_name:'',
+        email:'',
+        phone_number:'',
+        address:'',
+        age:'',
+    });
     const [alert, setAlert] = useState({ type: 'success', msg: '' })
     useEffect(() => {
         getData()
     }, [])
 
     const getData = async () => {
-        const {data} = await getProfileData(user)
-        setUserDetails(user.user_type==='Professional' ? data.professional_info: data.customer_info);
+        try {
+            const {data} = await getProfileData(user.uid)
+        console.log(data);
+        }
+        catch(e) {
+            setAlert({ type: 'error', msg: e.message });
+        }
+        
     }
 
     const submit = async ()=> {
-        const req = {first_name, last_name,phone, age, address, city: state, state: country, weight, height};
+        const req = {first_name, last_name,phone, age, address};
         try {
             const {data} = await updateProfile(user, req);
             setAlert({type:'success',msg:'Details updated successfully'})
@@ -48,30 +61,22 @@ export function Profile() {
         <div className="user-profile-container">
             {/* <Navbar></Navbar> */}
             
-            {userDetails && <div className="user-profile-form">
+            { <div className="user-profile-form">
             {alert.msg && <Alert onClose={()=>setAlert({msg:''})} severity={alert.type}>{alert.msg}</Alert>}
                 <Avatar sx={{ width: 75, height: 75 }}></Avatar>
                 <p>Update Photo</p>
                 <div className="text-inputs">
                     <div className="row">
-                        <TextField disabled className="input-field" label="First Name" size="medium" variant='outlined' placeholder='First Name' value={user.first_name}></TextField>
-                        <TextField disabled className="input-field" label="Last Name" size="medium" variant='outlined' placeholder='Last Name' value={user.last_name}></TextField>
+                        <TextField  className="input-field" label="First Name" size="medium" variant='outlined' placeholder='First Name' value={user.first_name}></TextField>
+                        <TextField  className="input-field" label="Last Name" size="medium" variant='outlined' placeholder='Last Name' value={user.last_name}></TextField>
                     </div>
                     <div className="row">
-                        <TextField disabled className="input-field" label="Email" size="medium" variant="outlined" placeholder="Email" value={userDetails.email}></TextField>
+                        <TextField  className="input-field" label="Email" size="medium" variant="outlined" placeholder="Email" value={userDetails.email}></TextField>
                         <TextField className="input-field" label="Phone" size="medium" variant="outlined" placeholder="Phone" onChange={(e) => setPhone(e.target.value)} value={userDetails.updateProfilephone}></TextField>
                     </div>
                     <div className="row">
                         <TextField className="input-field" label="Age" size="medium" variant="outlined" placeholder="Age" onChange={(e) => setAge(e.target.value)} value={userDetails.age}></TextField>
                         <TextField className="input-field" label="Address" size="medium" variant="outlined" placeholder="Address" onChange={(e) => setAddress(e.target.value)} value={userDetails.address}></TextField>
-                    </div>
-                    <div className="row">
-                        <TextField className="input-field" label="State" size="medium" variant="outlined" placeholder="State" onChange={(e) => setState(e.target.value)} value={userDetails.city}></TextField>
-                        <TextField className="input-field" label="Country" size="medium" variant="outlined" placeholder="Country" onChange={(e) => setCountry(e.target.value)} value={userDetails.state}></TextField>
-                    </div>
-                    <div className="row">
-                        <TextField className="input-field" label="Weight" size="medium" variant="outlined" placeholder="Weight (in Kg)" onChange={(e) => setWeight(e.target.value)} value={userDetails.weight}></TextField>
-                        <TextField className="input-field" label="Height" size="medium" variant="outlined" placeholder="Height (in cm)" onChange={(e) => setHeight(e.target.value)} value={userDetails.height}></TextField>
                     </div>
                     <Button variant="contained" size="large" onClick={()=>submit()}>
                         Save

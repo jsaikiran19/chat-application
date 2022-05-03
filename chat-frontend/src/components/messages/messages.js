@@ -14,7 +14,7 @@ export function Messages({ org }) {
   const [orgUsers, setOrgUsers] = useState();
   useEffect(() => {
     getAllOrgUsers(org.org_id);
-  }, []);
+  }, [org]);
   
   const [userId, setUserId] = useState(0);
 
@@ -31,7 +31,7 @@ export function Messages({ org }) {
     <>
       {orgUsers ? <div className="messages-container" style={{ display: 'flex' }}>
         <ChatFeed org={org} users={orgUsers} setUserId={setUserId} />
-        <div className="messages-body" style={{ width: '60%', overflow: "hidden scroll" }}>
+        <div className="messages-body" style={{ width: '45%', overflow: "hidden scroll" }}>
           <Chats userId={userId} orgUsers={orgUsers} org={org} />
         </div>
       </div> : <CircularProgress />}

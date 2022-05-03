@@ -12,13 +12,22 @@ export function Chats({ userId, org, orgUsers }) {
     const [message, setMessage] = useState('');
     useEffect(() => {
         if (orgUsers) {
-
             const req = { org_id: org.org_id, from_user: userDetails.uid, to_user: orgUsers[userId].uid };
             getChats(req);
-
-        }
+        }   
 
     }, [orgUsers, userId]);
+
+    
+
+    const receiveMessage = () => {
+        // while(true) {
+            setTimeout(() => {
+                
+            }, 1000);
+        // }
+        
+    }
 
     const getChats = async (req) => {
         const { data } = await getChatsBetweenUsers(req);
