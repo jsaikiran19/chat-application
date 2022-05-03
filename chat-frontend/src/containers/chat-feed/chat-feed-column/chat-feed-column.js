@@ -18,7 +18,7 @@ export function ChatFeed({users, org, setUserId}) {
             from_user: userDetails.uid,
             to_user: user.uid}
         }
-        Promise.all(users.map(user=>getLatestMessage(req(user)))).then(res=>{
+        Promise.all(users.slice(1, users.length-1).map(user=>getLatestMessage(req(user)))).then(res=>{
             console.log(res);
             
             const latestMessages = res.map(r=>r.data.response.messages[0]);

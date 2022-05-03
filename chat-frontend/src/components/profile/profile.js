@@ -11,7 +11,7 @@ export function Profile() {
     const [userDetails, setUserDetails] = useState({
         first_name:'',
         last_name:'',
-        email:'',
+        user_mail:'',
         phone_number:'',
         address:'',
         age:'',
@@ -47,7 +47,7 @@ export function Profile() {
 
     const [first_name, setFirstName] = useState();
     const [last_name, setLastName] = useState();
-    const [email, setEmail] = useState();
+    const [user_mail, setEmail] = useState();
     const [phone, setPhone] = useState();
     const [age, setAge] = useState();
     const [address, setAddress] = useState();
@@ -67,17 +67,17 @@ export function Profile() {
                 <p>Update Photo</p>
                 <div className="text-inputs">
                     <div className="row">
-                        <TextField  className="input-field" label="First Name" size="medium" variant='outlined' placeholder='First Name' value={user.first_name}></TextField>
-                        <TextField  className="input-field" label="Last Name" size="medium" variant='outlined' placeholder='Last Name' value={user.last_name}></TextField>
+                        <TextField  className="input-field" label="First Name" size="medium" variant='outlined' placeholder='First Name' onChange={(e)=>setFirstName(e.target.value)} value={user.first_name}></TextField>
+                        <TextField  className="input-field" label="Last Name" size="medium" variant='outlined' placeholder='Last Name' onChange={(e)=>setLastName(e.target.value)} value={user.last_name}></TextField>
                     </div>
                     <div className="row">
-                        <TextField  className="input-field" label="Email" size="medium" variant="outlined" placeholder="Email" value={userDetails.email}></TextField>
-                        <TextField className="input-field" label="Phone" size="medium" variant="outlined" placeholder="Phone" onChange={(e) => setPhone(e.target.value)} value={userDetails.updateProfilephone}></TextField>
+                        <TextField  className="input-field" label="Email" size="medium" variant="outlined" placeholder="Email" onChange={(e)=>setEmail(e.target.value)} value={user.user_mail}></TextField>
+                        <TextField className="input-field" label="Phone" size="medium" variant="outlined" placeholder="Phone" onChange={(e) => setPhone(e.target.value)} value={user.phone}></TextField>
                     </div>
-                    <div className="row">
-                        <TextField className="input-field" label="Age" size="medium" variant="outlined" placeholder="Age" onChange={(e) => setAge(e.target.value)} value={userDetails.age}></TextField>
-                        <TextField className="input-field" label="Address" size="medium" variant="outlined" placeholder="Address" onChange={(e) => setAddress(e.target.value)} value={userDetails.address}></TextField>
-                    </div>
+                    {/* <div className="row">
+                        <TextField className="input-field" label="Age" size="medium" variant="outlined" placeholder="Age" onChange={(e) => setAge(e.target.value)} value={user.age}></TextField>
+                        <TextField className="input-field" label="Address" size="medium" variant="outlined" placeholder="Address" onChange={(e) => setAddress(e.target.value)} value={user.address}></TextField>
+                    </div> */}
                     <Button variant="contained" size="large" onClick={()=>submit()}>
                         Save
                     </Button>

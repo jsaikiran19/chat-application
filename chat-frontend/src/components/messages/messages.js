@@ -8,6 +8,8 @@ import { ChatHead } from "../../containers/chat-head/chat-head";
 import { ChatFeed } from "../../containers/chat-feed/chat-feed-column/chat-feed-column";
 import { Chats } from "../../containers/chat-feed/chats";
 import { getChatsBetweenUsers, getOrgLevelUsers } from "../../services/user.service";
+import { Profile } from "./profile/profile";
+
 
 export function Messages({ org }) {
   const userDetails = store.getState().userDetails;
